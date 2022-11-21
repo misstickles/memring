@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">memring</string>
+    <string name="empty_screen_subtitle">This screen is intentionally left blank.  Please try again later.</string>
+    <string name="empty_screen_title">Screen Under Construction</string>
 </resources>

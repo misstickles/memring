@@ -13,28 +13,58 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = primary,
+    secondary = secondary,
+    tertiary = tertiary,
+    error = error,
+    background = background,
+    outline = outline,
+    onPrimary = onPrimary,
+    onSecondary = onSecondary,
+    onTertiary = onTertiary,
+    onError = onError,
+    onBackground = onBackground,
+    primaryContainer = primaryContainer,
+    secondaryContainer = secondaryContainer,
+    tertiaryContainer = tertiaryContainer,
+    errorContainer = errorContainer,
+    surface = surface,
+    surfaceVariant = surfaceVariant,
+    onPrimaryContainer = onPrimaryContainer,
+    onSecondaryContainer = onSecondaryContainer,
+    onTertiaryContainer = onTertiaryContainer,
+    onErrorContainer = onErrorContainer,
+    onSurface = onSurface,
+    onSurfaceVariant = onSurfaceVariant
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = primary,
+    secondary = secondary,
+    tertiary = tertiary,
+    error = error,
+    background = background,
+    outline = outline,
+    onPrimary = onPrimary,
+    onSecondary = onSecondary,
+    onTertiary = onTertiary,
+    onError = onError,
+    onBackground = onBackground,
+    primaryContainer = primaryContainer,
+    secondaryContainer = secondaryContainer,
+    tertiaryContainer = tertiaryContainer,
+    errorContainer = errorContainer,
+    surface = surface,
+    surfaceVariant = surfaceVariant,
+    onPrimaryContainer = onPrimaryContainer,
+    onSecondaryContainer = onSecondaryContainer,
+    onTertiaryContainer = onTertiaryContainer,
+    onErrorContainer = onErrorContainer,
+    onSurface = onSurface,
+    onSurfaceVariant = onSurfaceVariant
 )
 
 @Composable
@@ -55,13 +85,20 @@ fun MemringTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+            val window = (view.context as Activity).window
+            window.statusBarColor = colorScheme.primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
+// scaffold code.  above is Reply sample code
+//        SideEffect {
+//            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
+//            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+//        }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
+        shapes = shapes,
         typography = Typography,
         content = content
     )

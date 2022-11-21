@@ -3,13 +3,14 @@ package uk.co.jofaircloth.memring
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import uk.co.jofaircloth.memring.domain.PlaceNotationManager
+import uk.co.jofaircloth.memring.ui.components.GenerateLine
 import uk.co.jofaircloth.memring.ui.theme.MemringTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +32,27 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+    Column() {
+        Row() {
+            GenerateLine(
+                method = PlaceNotationManager().generateRows( "5.1.5.1.5.1.5.1.5", 5) // plain hunt
+//                method = PlaceNotationManager().generateRows("5.1.5.1.5,125", 5) // plain bob doubles
+//                method = PlaceNotationManager().generateRows("-36-14-12-36.14-12.56,12", 6)
+            )
+        }
+
+//        Column(Modifier.fillMaxWidth()) {
+//            Text(text = "Hello $name!")
+//
+//            ComposePlay().StageCheckboxList()
+//
+//            ComposePlay().DieButton(
+//                modifier = Modifier
+//                    .size(120.dp)
+//                    .padding(top = 50.dp, bottom = 30.dp)
+//            )
+//        }
+    }
 }
 
 @Preview(showBackground = true)
