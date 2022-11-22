@@ -3,7 +3,7 @@ package uk.co.jofaircloth.memring.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // https://developer.android.com/jetpack/compose/designsystems/material3
-// https://m3.material.io/theme-builder#/custom (#6750A4)
+// https://m3.material.io/theme-builder#/custom (#6750A4)   d95500
 
 // Crane colours
 //val primary = Color(0xFF5D1049)
@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 
 // orange = #EF7000
 
-val primary = Color(0xFF381E72)
-val secondary = Color(0xFF332D41)
+val primary = Color(0xFF5D1049)
+val secondary = Color(0xFFE30425)
 val tertiary = Color(0xFF492532)
 val error = Color(0xFF601410)
 val background = Color(0xFF1C1B1F)
