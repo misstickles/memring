@@ -1,0 +1,29 @@
+package uk.co.jofaircloth.memring
+
+import org.junit.Assert
+import org.junit.Test
+import uk.co.jofaircloth.memring.data.repository.MethodsCollectionRepository
+
+class DomainMethodsCollectionRepositoryTests {
+    @Test
+    fun deserializeXml() {
+        val collection = MethodsCollectionRepository.deserializeMethodCollection()
+
+        Assert.assertEquals("Central Council Collection of Methods", collection.name)
+        Assert.assertEquals(906, collection.methodSet.count())
+        Assert.assertEquals(1, collection.methodSet[0].method.count())
+        Assert.assertEquals(76, collection.methodSet[93].method.count())
+        Assert.assertEquals("Cross Two", collection.methodSet[0].method[0].title)
+        Assert.assertEquals("21", collection.methodSet[0].method[0].leadHead)
+        Assert.assertEquals(true, collection.methodSet[899].properties.classification?.isLittle)
+        Assert.assertEquals("Hybrid", collection.methodSet[899].properties.classification?.text)
+    }
+
+    @Test
+    fun deserializeCollectionXml() {
+        val result = MethodsCollectionRepository.deserializeMethodCollection()
+
+        Assert.assertTrue(result.methodSet.count() > 5)
+    }
+
+}

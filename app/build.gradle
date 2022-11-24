@@ -50,19 +50,23 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.material3:material3:$material3_version"
     implementation "androidx.compose.material3:material3-window-size-class:$material3_version"
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.0'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.1'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1'
 
     // https://github.com/FasterXML/jackson-dataformat-xml/issues/533 (is missing from Android for XML)
 //    implementation 'javax.xml.stream:stax-api:1.0-2'
 
     testImplementation 'junit:junit:4.13.2'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.1'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'

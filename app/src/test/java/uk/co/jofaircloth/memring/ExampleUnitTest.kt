@@ -3,7 +3,7 @@ package uk.co.jofaircloth.memring
 import org.junit.Test
 
 import org.junit.Assert.*
-import uk.co.jofaircloth.memring.data.MethodsCollectionRepository
+import uk.co.jofaircloth.memring.data.repository.MethodsCollectionRepository
 
 /**
  * Example local unit test, which will execute on the development machine (host).

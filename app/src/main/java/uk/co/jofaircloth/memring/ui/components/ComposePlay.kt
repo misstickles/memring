@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import uk.co.jofaircloth.memring.R
-import uk.co.jofaircloth.memring.models.Stage
+import uk.co.jofaircloth.memring.data.models.Stage
 import uk.co.jofaircloth.memring.ui.theme.MemringTheme
 
 class ComposePlay {

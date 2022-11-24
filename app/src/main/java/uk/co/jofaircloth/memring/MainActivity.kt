@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import uk.co.jofaircloth.memring.domain.PlaceNotationManager
 import uk.co.jofaircloth.memring.ui.components.ComposePlay
 import uk.co.jofaircloth.memring.ui.components.GenerateLine
+import uk.co.jofaircloth.memring.ui.methodDisplay.MethodDisplayScreen
 import uk.co.jofaircloth.memring.ui.theme.MemringTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,20 +30,21 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(modifier: Modifier = Modifier) {
     MemringTheme {
-        Scaffold(
-            bottomBar = {}
-        ) { padding ->
+//        Scaffold(
+//            bottomBar = {}
+//        ) {
             // A surface container using the 'background' color from the theme
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.primaryContainer
             ) {
-                Greeting(
-                    Modifier.padding(padding),
-                    "Android"
-                )
+                MethodDisplayScreen()
+//                Greeting(
+//                    Modifier.padding(padding),
+//                    "Android"
+//                )
             }
-        }
+//        }
     }
 }
 
