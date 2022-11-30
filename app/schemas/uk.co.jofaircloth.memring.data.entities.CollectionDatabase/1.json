@@ -1,0 +1,270 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "477a6ccdc3bc7f9184905fbefdd91870",
+    "entities": [
+      {
+        "tableName": "method",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `propertyId` INTEGER NOT NULL, `title` TEXT, `name` TEXT, `notation` TEXT, `leadHead` TEXT, `leadHeadCode` TEXT, `falseness` TEXT, `symmetry` TEXT, `extensionConstruction` TEXT, `notes` TEXT, `meta` TEXT, `references` TEXT, `performances` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`propertyId`) REFERENCES `property`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyId",
+            "columnName": "propertyId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notation",
+            "columnName": "notation",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "leadHead",
+            "columnName": "leadHead",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "leadHeadCode",
+            "columnName": "leadHeadCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "falseness",
+            "columnName": "falseness",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "symmetry",
+            "columnName": "symmetry",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extensionConstruction",
+            "columnName": "extensionConstruction",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meta",
+            "columnName": "meta",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "references",
+            "columnName": "references",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "performances",
+            "columnName": "performances",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_method_id",
+            "unique": true,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_method_id` ON `${TABLE_NAME}` (`id`)"
+          },
+          {
+            "name": "index_method_id_propertyId",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "propertyId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_method_id_propertyId` ON `${TABLE_NAME}` (`id`, `propertyId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "property",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "propertyId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "property",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `stage` INTEGER, `lengthOfLead` INTEGER, `numberOfHunts` INTEGER, `huntbellPath` TEXT, `classification` TEXT, `isDifferential` INTEGER NOT NULL, `isLittle` INTEGER NOT NULL, `isPlain` INTEGER NOT NULL, `isTrebleDodging` INTEGER NOT NULL, `leadHead` TEXT, `leadHeadCode` TEXT, `falseness` TEXT, `symmetry` TEXT, `extensionConstruction` TEXT, `notes` TEXT, `meta` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stage",
+            "columnName": "stage",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lengthOfLead",
+            "columnName": "lengthOfLead",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "numberOfHunts",
+            "columnName": "numberOfHunts",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "huntbellPath",
+            "columnName": "huntbellPath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "classification",
+            "columnName": "classification",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isDifferential",
+            "columnName": "isDifferential",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isLittle",
+            "columnName": "isLittle",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isPlain",
+            "columnName": "isPlain",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTrebleDodging",
+            "columnName": "isTrebleDodging",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "leadHead",
+            "columnName": "leadHead",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "leadHeadCode",
+            "columnName": "leadHeadCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "falseness",
+            "columnName": "falseness",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "symmetry",
+            "columnName": "symmetry",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extensionConstruction",
+            "columnName": "extensionConstruction",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meta",
+            "columnName": "meta",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_property_id",
+            "unique": true,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_property_id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '477a6ccdc3bc7f9184905fbefdd91870')"
+    ]
+  }
+}
