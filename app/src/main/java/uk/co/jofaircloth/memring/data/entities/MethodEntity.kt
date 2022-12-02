@@ -14,7 +14,12 @@ import androidx.room.PrimaryKey
             entity = PropertyEntity::class,
             parentColumns = ["id"],
             childColumns = ["propertyId"]
-        )
+        ),
+//        ForeignKey(
+//            entity = PerformanceEntity::class,
+//            parentColumns = ["id"],
+//            childColumns = ["performanceId"]
+//        )
     ],
     indices = [
         Index("id", "propertyId", unique = true)
@@ -29,6 +34,7 @@ data class MethodEntity(
     @ColumnInfo(name = "id")
     val id: String,
     @ColumnInfo(name = "propertyId") val propertyId: Int,
+    @ColumnInfo(name = "performanceId") val performanceId: Int,
     @ColumnInfo(name = "title") val title: String? = null,
     @ColumnInfo(name = "name") val name: String? = null,
     @ColumnInfo(name = "notation") val notation: String? = null,
@@ -39,6 +45,5 @@ data class MethodEntity(
     @ColumnInfo(name = "extensionConstruction") val extensionConstruction: String? = null,
     @ColumnInfo(name = "notes") val notes: String? = null,
     @ColumnInfo(name = "meta") val meta: String? = null,
-    @ColumnInfo(name = "references") val references: String? = null, // TODO this is an object
-    @ColumnInfo(name = "performances") val performances: String? = null, // TODO this is a Performance
+    @ColumnInfo(name = "rwReference") val rwReference: String? = null, // TODO this is an object
 )

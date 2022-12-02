@@ -8,12 +8,19 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 data class Method (
     @JacksonXmlProperty(isAttribute = true) var id: String,
     @JsonProperty("title") var title: String = "",
-    @JsonProperty("name") var name: String? = "", // nullable reqd for when <name /> @30541
-    @JsonProperty("notation") var notation: String = "",
-    @JsonProperty("symmetry") var symmetry: String = "",
-    @JsonProperty("leadHeadCode") var leadHeadCode: String = "",
-    @JsonProperty("leadHead") var leadHead: String = "",
-    @JsonProperty("notes") var notes: String = "",
-    @JsonProperty("meta") var meta: String = "",
-    @JsonProperty("extensionConstruction") val extensionConstruction: String = ""
+    @JsonProperty("name") var name: String?, // nullable reqd for when <name /> @30541
+    @JsonProperty("notation") var notation: String?,
+    @JsonProperty("symmetry") var symmetry: String?,
+    @JsonProperty("leadHeadCode") var leadHeadCode: String?,
+    @JsonProperty("leadHead") var leadHead: String?,
+    @JsonProperty("notes") var notes: String?,
+    @JsonProperty("meta") var meta: String?,
+    @JsonProperty("extensionConstruction") val extensionConstruction: String?,
+//    @JsonProperty("performances") val performances: Performance?,
+//    @JsonProperty("references") private val reference: Reference?,
+//    val rwReference: String? = reference?.rwRef
+)
+
+data class Reference(
+    @JsonProperty("rwRef") val rwRef: String?
 )

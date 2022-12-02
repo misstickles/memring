@@ -11,8 +11,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import uk.co.jofaircloth.memring.data.dao.MethodDao
+import uk.co.jofaircloth.memring.data.dao.PerformanceDao
 import uk.co.jofaircloth.memring.data.dao.PropertyDao
 import uk.co.jofaircloth.memring.data.entities.MethodEntity
+import uk.co.jofaircloth.memring.data.entities.PerformanceEntity
 import uk.co.jofaircloth.memring.data.entities.PropertyEntity
 
 private const val TAG = "CollectionDatabase"
@@ -20,7 +22,8 @@ private const val TAG = "CollectionDatabase"
 @Database(
     entities = [
         MethodEntity::class,
-        PropertyEntity::class
+        PerformanceEntity::class,
+        PropertyEntity::class,
     ],
     version = 1,
     exportSchema = false
@@ -28,6 +31,7 @@ private const val TAG = "CollectionDatabase"
 abstract class CollectionDatabase : RoomDatabase() {
 
     abstract fun methodDao(): MethodDao
+    abstract fun performanceDao(): PerformanceDao
     abstract fun propertyDao(): PropertyDao
 
     private class CollectionDatabaseCallback(
@@ -39,19 +43,9 @@ abstract class CollectionDatabase : RoomDatabase() {
             Log.d(TAG, "ONCREEATE")
             INSTANCE?.let { database ->
                 scope.launch {
-                    var propertyDao = database.propertyDao()
-
-                    var property = PropertyEntity(
-                        id = 1,
-                        stage = 6,
-                        leadHead = "142356",
-                        isPlain = true
-                    )
-
-                    Log.d(TAG, "PROPERTY: $property")
-//                    propertyDao.insert(property)
                     populateCollectionDatabase(
                         database.methodDao(),
+                        database.performanceDao(),
                         database.propertyDao()
                     )
                 }
