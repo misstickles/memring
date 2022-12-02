@@ -26,6 +26,7 @@
   - what other type of exceptions, stedman?
 - Favourite
 - Show bluelines in multiple columns
+- Fix out of date version of Jackson (gone back this far to avoid THAT error static method not found)
 
 ### Persist data
 

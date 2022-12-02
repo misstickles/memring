@@ -6,13 +6,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 
 @JsonRootName("method")
 data class Method (
-    @set:JacksonXmlProperty(isAttribute = true) var id: String,
-    @set:JsonProperty("title") var title: String = "",
-    @set:JsonProperty("name") var name: String = "",
-    @set:JsonProperty("notation") var notation: String = "",
-    @set:JsonProperty("symmetry") var symmetry: String = "",
-    @set:JsonProperty("leadHeadCode") var leadHeadCode: String = "",
-    @set:JsonProperty("leadHead") var leadHead: String = "",
-    @set:JsonProperty("notes") var notes: String = "",
-    @set:JsonProperty("meta") var meta: String = ""
+    @JacksonXmlProperty(isAttribute = true) var id: String,
+    @JsonProperty("title") var title: String = "",
+    @JsonProperty("name") var name: String? = "", // nullable reqd for when <name /> @30541
+    @JsonProperty("notation") var notation: String = "",
+    @JsonProperty("symmetry") var symmetry: String = "",
+    @JsonProperty("leadHeadCode") var leadHeadCode: String = "",
+    @JsonProperty("leadHead") var leadHead: String = "",
+    @JsonProperty("notes") var notes: String = "",
+    @JsonProperty("meta") var meta: String = "",
+    @JsonProperty("extensionConstruction") val extensionConstruction: String = ""
 )

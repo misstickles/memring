@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonRootName
 
 @JsonRootName("collection")
 data class Collection(
-    @set:JsonProperty("collectionName") var name: String?,
-    @set:JsonProperty("notes") var notes: String?,
-    @set:JsonProperty("methodSet") var methodSet: List<MethodSet>
+    @JsonProperty("collectionName") var name: String?,
+    @JsonProperty("notes") var notes: String?,
+    @JsonProperty("methodSet") var methodSet: List<MethodSet>? = listOf()
 )

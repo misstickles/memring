@@ -7,18 +7,18 @@ import uk.co.jofaircloth.memring.data.xml.Falseness
 
 @JsonRootName("properties")
 data class Properties(
-//    @set:JsonProperty("classification") var classification: Classification?, // TODO classification
-    @set:JsonProperty("stage") var stage: Int?,
-    @set:JsonProperty("lengthOfLead") var lengthOfLead: Int?,
-    @set:JsonProperty("numberOfHunts") var numberOfHunts: Int?,
-    @set:JsonProperty("huntbellPath") var huntbellPath: String?,
-    @set:JsonProperty("leadHead") var leadHead: String?,
-    @set:JsonProperty("leadHeadCode") var leadHeadCode: String?,
-    @set:JsonProperty("falseness") var falsness: Falseness?,
-    @set:JsonProperty("symmetry") var symmetry: String?,
-    @set:JsonProperty("extensionConstruction") var extensionConstruction: String?,
-    @set:JsonProperty("meta") var meta: String?,
-    @set:JsonProperty("notes") var notes: String?
+//    @JsonProperty("classification") var classification: Classification?, // TODO classification
+    @JsonProperty("stage") var stage: Int?,
+    @JsonProperty("lengthOfLead") var lengthOfLead: Int?,
+    @JsonProperty("numberOfHunts") var numberOfHunts: Int?,
+    @JsonProperty("huntbellPath") var huntbellPath: String?,
+    @JsonProperty("leadHead") var leadHead: String?,
+    @JsonProperty("leadHeadCode") var leadHeadCode: String?,
+    @JsonProperty("falseness") var falsness: Falseness?,
+    @JsonProperty("symmetry") var symmetry: String?,
+    @JsonProperty("extensionConstruction") var extensionConstruction: String?,
+    @JsonProperty("meta") var meta: String?,
+    @JsonProperty("notes") var notes: String?
 )
 
 @JsonRootName("classification")

@@ -18,33 +18,33 @@ suspend fun populateCollectionDatabase(
 
         val collection = MethodsCollectionRepository().deserializeCollection()
 
-        for ((idx, ms) in collection.methodSet!!.withIndex()) {
-            Log.d(TAG, "Adding set $idx, ${ms.methods.count()}")
-
+        for ((idx, ms) in (collection.methodSet ?: listOf()).withIndex()) {
+//            Log.d(TAG, "Adding set $idx, ${ms.methods?.count()}")
+//
             val properties = ms.properties
             val property = PropertyEntity(
                 id = idx,
-                stage = ms.properties.stage,
+                stage = ms.properties?.stage,
 //                classification = properties.classification?.text,
 //                isDifferential = properties.classification?.isDifferential ?: false,
 //                isPlain = properties.classification?.isPlain ?: false,
 //                isLittle = properties.classification?.isLittle ?: false,
 //                isTrebleDodging = properties.classification?.isTrebleDodging ?: false,
-                extensionConstruction = properties.extensionConstruction,
+                extensionConstruction = properties?.extensionConstruction,
                 falseness = "",
-                huntbellPath = properties.huntbellPath,
-                leadHead = properties.leadHead,
-                leadHeadCode = properties.leadHeadCode,
-                lengthOfLead = properties.lengthOfLead,
-                meta = properties.meta,
-                notes =  properties.notes,
-                numberOfHunts = properties.numberOfHunts,
-                symmetry = properties.symmetry,
+                huntbellPath = properties?.huntbellPath,
+                leadHead = properties?.leadHead,
+                leadHeadCode = properties?.leadHeadCode,
+                lengthOfLead = properties?.lengthOfLead,
+                meta = properties?.meta,
+                notes =  properties?.notes,
+                numberOfHunts = properties?.numberOfHunts,
+                symmetry = properties?.symmetry,
             )
 
-            propertyDao?.insert(property)
+            propertyDao.insert(property)
 
-            for (m in ms.methods) {
+            for (m in ms.methods ?: listOf()) {
                 val method = MethodEntity(
                     id = m.id,
                     propertyId = idx,
@@ -59,9 +59,11 @@ suspend fun populateCollectionDatabase(
                     meta = m.meta
                 )
 
-                methodDao?.insert(method)
+                methodDao.insert(method)
             }
         }
+
+        Log.d(TAG, "DONE")
     } catch (e:java.lang.Exception) {
         Log.d(TAG, "$e")
     }
