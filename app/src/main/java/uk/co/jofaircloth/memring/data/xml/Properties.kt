@@ -13,7 +13,6 @@ data class Properties(
     @JsonProperty("lengthOfLead") var lengthOfLead: Int?,
     @JsonProperty("numberOfHunts") var numberOfHunts: Int?,
     @JsonProperty("huntbellPath") var huntbellPath: String?,
-    @JsonProperty("leadHead") var leadHead: String?,
     @JsonProperty("leadHeadCode") var leadHeadCode: String?,
     @JsonProperty("falseness") var falsness: Falseness?,
     @JsonProperty("symmetry") var symmetry: String?,
@@ -25,9 +24,9 @@ data class Properties(
 @JsonRootName("classification")
 class Classification {
     @JacksonXmlProperty(localName = "little", isAttribute = true)
-    var isLittle: Boolean = true
+    var isLittle: Boolean = false
     @JacksonXmlProperty(localName = "plain", isAttribute = true)
-    var isPlain: Boolean = true
+    var isPlain: Boolean = false
     @JacksonXmlProperty(localName = "differential", isAttribute = true)
     var isDifferential: Boolean = false
     @JacksonXmlProperty(localName = "trebleDodging", isAttribute = true)

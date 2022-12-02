@@ -14,11 +14,11 @@ data class Method (
     @JsonProperty("leadHeadCode") var leadHeadCode: String?,
     @JsonProperty("leadHead") var leadHead: String?,
     @JsonProperty("notes") var notes: String?,
-    @JsonProperty("meta") var meta: String?,
     @JsonProperty("extensionConstruction") val extensionConstruction: String?,
+    @JsonProperty("falseness") var falsness: Falseness?,
 //    @JsonProperty("performances") val performances: Performance?,
-//    @JsonProperty("references") private val reference: Reference?,
-//    val rwReference: String? = reference?.rwRef
+    @JsonProperty("references") private val reference: Reference?,
+    val rwReference: String? = reference?.rwRef
 )
 
 data class Reference(

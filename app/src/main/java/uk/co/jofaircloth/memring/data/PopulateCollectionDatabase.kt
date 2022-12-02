@@ -31,19 +31,12 @@ suspend fun populateCollectionDatabase(
                 isPlain = properties?.classification?.isPlain ?: false,
                 isLittle = properties?.classification?.isLittle ?: false,
                 isTrebleDodging = properties?.classification?.isTrebleDodging ?: false,
-                extensionConstruction = properties?.extensionConstruction,
-                falseness = "",
                 huntbellPath = properties?.huntbellPath,
-                leadHead = properties?.leadHead,
-                leadHeadCode = properties?.leadHeadCode,
                 lengthOfLead = properties?.lengthOfLead,
-                meta = properties?.meta,
-                notes =  properties?.notes,
-                numberOfHunts = properties?.numberOfHunts,
-                symmetry = properties?.symmetry
+                numberOfHunts = properties?.numberOfHunts
             )
 
-            val x = propertyDao.insert(property)
+            propertyDao.insert(property)
 
             for (m in ms.methods ?: listOf()) {
                 val method = MethodEntity(
@@ -54,12 +47,12 @@ suspend fun populateCollectionDatabase(
                     notation = m.notation,
                     leadHeadCode = m.leadHeadCode,
                     leadHead = m.leadHead,
-                    falseness = "",
                     symmetry = m.symmetry,
                     notes = m.notes,
-                    meta = m.meta,
                     extensionConstruction = m.extensionConstruction,
-                    performanceId = 0
+                    performanceId = 0,
+                    fchGroups = m.falsness?.fchGroups,
+                    rwReference = m.rwReference
                 )
 
                 methodDao.insert(method)

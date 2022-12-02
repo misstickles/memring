@@ -26,12 +26,5 @@ data class PropertyEntity(
     @ColumnInfo(name = "isDifferential") val isDifferential: Boolean = false,
     @ColumnInfo(name = "isLittle") val isLittle: Boolean = false,
     @ColumnInfo(name = "isPlain") val isPlain: Boolean = false,
-    @ColumnInfo(name = "isTrebleDodging") val isTrebleDodging: Boolean = false,
-    @ColumnInfo(name = "leadHead") val leadHead: String? = null,
-    @ColumnInfo(name = "leadHeadCode") val leadHeadCode: String? = null,
-    @ColumnInfo(name = "falseness") val falseness: String? = null, // TODO falseness
-    @ColumnInfo(name = "symmetry") val symmetry: String? = null, // palindromic | double | rotational
-    @ColumnInfo(name = "extensionConstruction") val extensionConstruction: String? = null,
-    @ColumnInfo(name = "notes") val notes: String? = null,
-    @ColumnInfo(name = "meta") val meta: String? = null,
+    @ColumnInfo(name = "isTrebleDodging") val isTrebleDodging: Boolean = false
 )
