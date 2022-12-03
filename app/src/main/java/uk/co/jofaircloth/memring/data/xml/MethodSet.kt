@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonRootName
 
 @JsonRootName("methodSet")
 data class MethodSet(
-    @JsonProperty("notes") var notes: String?,
-    @JsonProperty("properties") var properties: Properties?,
-    @JsonProperty("method") var methods: List<Method>? = listOf()
+    @JsonProperty("notes") val notes: String?,
+    @JsonProperty("properties") val properties: Properties?,
+    @JsonProperty("method") val methods: List<Method>? = listOf()
 )

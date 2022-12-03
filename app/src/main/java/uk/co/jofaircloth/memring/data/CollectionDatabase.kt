@@ -1,5 +1,3 @@
-// https://methods.cccbr.org.uk/notes.html
-// https://methods.cccbr.org.uk/method_xml_1.0.pdf
 package uk.co.jofaircloth.memring.data
 
 import android.content.Context
@@ -11,11 +9,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import uk.co.jofaircloth.memring.data.dao.MethodDao
+import uk.co.jofaircloth.memring.data.dao.MethodPerformanceDao
 import uk.co.jofaircloth.memring.data.dao.PerformanceDao
 import uk.co.jofaircloth.memring.data.dao.PropertyDao
-import uk.co.jofaircloth.memring.data.entities.MethodEntity
-import uk.co.jofaircloth.memring.data.entities.PerformanceEntity
-import uk.co.jofaircloth.memring.data.entities.PropertyEntity
+import uk.co.jofaircloth.memring.data.entities.*
 
 private const val TAG = "CollectionDatabase"
 
@@ -24,6 +21,8 @@ private const val TAG = "CollectionDatabase"
         MethodEntity::class,
         PerformanceEntity::class,
         PropertyEntity::class,
+        MethodPerformanceEntity::class,
+        FavouriteEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -33,6 +32,7 @@ abstract class CollectionDatabase : RoomDatabase() {
     abstract fun methodDao(): MethodDao
     abstract fun performanceDao(): PerformanceDao
     abstract fun propertyDao(): PropertyDao
+    abstract fun methodPerformanceDao(): MethodPerformanceDao
 
     private class CollectionDatabaseCallback(
         private val scope: CoroutineScope
@@ -46,7 +46,8 @@ abstract class CollectionDatabase : RoomDatabase() {
                     populateCollectionDatabase(
                         database.methodDao(),
                         database.performanceDao(),
-                        database.propertyDao()
+                        database.propertyDao(),
+                        database.methodPerformanceDao()
                     )
                 }
             }

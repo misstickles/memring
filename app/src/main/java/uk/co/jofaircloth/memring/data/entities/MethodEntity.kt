@@ -15,26 +15,24 @@ import androidx.room.PrimaryKey
             parentColumns = ["id"],
             childColumns = ["propertyId"]
         ),
-//        ForeignKey(
-//            entity = PerformanceEntity::class,
-//            parentColumns = ["id"],
-//            childColumns = ["performanceId"]
-//        )
+        ForeignKey(
+            entity = PropertyEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["propertyId"]
+        )
     ],
     indices = [
+        Index("id", unique = true),
         Index("id", "propertyId", unique = true)
     ]
 )
 
-// TODO method also has a decision year attr
-// TODO a lot of method in the docs is duplicate of properties...
 @Immutable
 data class MethodEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
     val id: String,
     @ColumnInfo(name = "propertyId") val propertyId: Int,
-    @ColumnInfo(name = "performanceId") val performanceId: Int,
     @ColumnInfo(name = "title") val title: String? = null,
     @ColumnInfo(name = "name") val name: String? = null,
     @ColumnInfo(name = "notation") val notation: String? = null,

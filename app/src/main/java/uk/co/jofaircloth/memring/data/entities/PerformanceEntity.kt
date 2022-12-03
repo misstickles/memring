@@ -19,11 +19,11 @@ import androidx.room.PrimaryKey
 data class PerformanceEntity (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int,
-    @ColumnInfo(name = "towerDate") val towerDate: String,
-    @ColumnInfo(name = "towerLocation") val towerLocation: String,
-    @ColumnInfo(name = "towerSociety") val towerSociety: String,
-    @ColumnInfo(name = "handDate") val handDate: String,
-    @ColumnInfo(name = "handLocation") val handLocation: String,
-    @ColumnInfo(name = "handSociety") val handSociety: String
+    val id: Int? = null,
+    @ColumnInfo(name = "date") val date: String?,
+    @ColumnInfo(name = "building") val building: String?,
+    @ColumnInfo(name = "town") val town: String?,
+    @ColumnInfo(name = "county") val county: String?,
+    @ColumnInfo(name = "society") val society: String?,
+    @ColumnInfo(name = "type") val type: String? // HAND | TOWER
 )

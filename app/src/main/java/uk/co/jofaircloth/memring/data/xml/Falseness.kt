@@ -5,12 +5,5 @@ import com.fasterxml.jackson.annotation.JsonRootName
 
 @JsonRootName("falseness")
 data class Falseness(
-//    @JsonProperty("falseCourseHeads") var falseCourseHeads: FalseCourseHeads?,
-    @JsonProperty("fchGroups") var fchGroups: String?
+    @JsonProperty("fchGroups") val fchGroups: String?
 )
-
-//@JsonRootName("falseCourseHeads")
-//data class FalseCourseHeads(
-//    @JsonProperty("inCourse") var inCourse: String?,
-//    @JsonProperty("outOfCourse") var outOfCourse: String?,
-//)

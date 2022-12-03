@@ -15,9 +15,9 @@ import androidx.room.PrimaryKey
 
 @Immutable
 data class PropertyEntity(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int,
+    val id: Int? = null,
     @ColumnInfo(name = "stage") val stage: Int? = null,
     @ColumnInfo(name = "lengthOfLead") val lengthOfLead: Int? = null,
     @ColumnInfo(name = "numberOfHunts") val numberOfHunts: Int? = null,

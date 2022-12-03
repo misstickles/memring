@@ -6,17 +6,17 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 
 @JsonRootName("method")
 data class Method (
-    @JacksonXmlProperty(isAttribute = true) var id: String,
-    @JsonProperty("title") var title: String = "",
-    @JsonProperty("name") var name: String?, // nullable reqd for when <name /> @30541
-    @JsonProperty("notation") var notation: String?,
-    @JsonProperty("symmetry") var symmetry: String?,
-    @JsonProperty("leadHeadCode") var leadHeadCode: String?,
-    @JsonProperty("leadHead") var leadHead: String?,
-    @JsonProperty("notes") var notes: String?,
+    @JacksonXmlProperty(isAttribute = true) val id: String,
+    @JsonProperty("title") val title: String = "",
+    @JsonProperty("name") val name: String?, // nullable reqd for when <name /> @30541
+    @JsonProperty("notation") val notation: String?,
+    @JsonProperty("symmetry") val symmetry: String?,
+    @JsonProperty("leadHeadCode") val leadHeadCode: String?,
+    @JsonProperty("leadHead") val leadHead: String?,
+    @JsonProperty("notes") val notes: String?,
     @JsonProperty("extensionConstruction") val extensionConstruction: String?,
-    @JsonProperty("falseness") var falsness: Falseness?,
-//    @JsonProperty("performances") val performances: Performance?,
+    @JsonProperty("falseness") val falsness: Falseness?,
+    @JsonProperty("performances") val performances: Performance?,
     @JsonProperty("references") private val reference: Reference?,
     val rwReference: String? = reference?.rwRef
 )

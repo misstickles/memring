@@ -8,7 +8,7 @@ import uk.co.jofaircloth.memring.data.entities.PropertyEntity
 @Dao
 interface PropertyDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(property: PropertyEntity)
+    suspend fun insert(property: PropertyEntity): Long
 //
 //    @Query("SELECT * from property WHERE id == :id")
 //    fun getPropertyById(id: Int): Flow<PropertyEntity>
