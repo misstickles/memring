@@ -1,0 +1,59 @@
+---
+title: "Summariss for CCCBR xml method data"
+author: "Jo Faircloth"
+date: "November 2022"
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup}
+library(xml2)
+library(tidyverse)
+```
+
+```{r init}
+setwd("./docs")
+getwd()
+```
+
+```{r read_xml}
+raw.data <- xml2::read_xml("D:/dev/projects/kotlin/memring/docs/CCCBR_methods.xml") |> as_list()
+
+```
+
+```{r ex}
+data <- read_xml("http://forecast.weather.gov/MapClick.php?lat=29.803&lon=-82.411&FcstType=digitalDWML")
+
+# Point locations
+point <- data %>% xml_find_all("//point/")
+point %>% xml_attr("latitude") %>% as.numeric()
+point %>% xml_attr("longitude") %>% as.numeric()
+
+
+library(XML)
+raw <- XML::xmlParse("CCCBR_methods.xml")
+
+bind_rows(xpathApply(raw, "//method", function(x) {
+  parent <- data.frame(as.list(xmlAttrs(x)), stringsAsFactors=FALSE)
+  kids <- bind_rows(lapply(xmlChildren(x), function(x) as.list(xmlAttrs(x))))
+  cbind.data.frame(parent, kids, stringsAsFactors=FALSE)
+}))
+
+
+# xml 2
+raw <- xml2::read_html("CCCBR_methods.xml")
+
+bind_rows(lapply(xml_find_all(raw, "//collection/methodSet"), function(x) {
+
+  # extract the attributes from the parent tag as a data.frame
+  parent <- data.frame(as.list(xml_attrs(x)), stringsAsFactors = FALSE)
+
+  # make a data.frame out of the attributes of the kids
+  kids <- bind_rows(lapply(xml_children(x), function(x) as.list(xml_attrs(x))))
+
+  # combine them
+  cbind.data.frame(parent, kids, stringsAsFactors = FALSE)
+}))
+
+```

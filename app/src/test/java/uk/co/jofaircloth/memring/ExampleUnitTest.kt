@@ -3,7 +3,7 @@ package uk.co.jofaircloth.memring
 import org.junit.Test
 
 import org.junit.Assert.*
-import uk.co.jofaircloth.memring.data.repository.MethodsCollectionRepository
+import uk.co.jofaircloth.memring.data.xml.MethodsCollectionRepository
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -18,8 +18,8 @@ class ExampleUnitTest {
 
     @Test
     fun deserializeCollectionXml() {
-        val result = MethodsCollectionRepository.deserializeMethodCollection()
+        val result = MethodsCollectionRepository().deserializeCollection()
 
-        assertTrue(result.methodSet.count() > 5)
+        assertTrue(result.methodSet!!.count() > 5)
     }
 }

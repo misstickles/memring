@@ -1,37 +1,39 @@
 package uk.co.jofaircloth.memring.ui.methodDisplay
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import uk.co.jofaircloth.memring.data.models.MethodItem
-import uk.co.jofaircloth.memring.data.models.Stage
-import uk.co.jofaircloth.memring.data.repository.MethodsCollectionRepository
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import uk.co.jofaircloth.memring.data.entities.MethodEntity
+import uk.co.jofaircloth.memring.data.repository.MethodRepository
 
-class MethodDisplayViewModel : ViewModel() {
-    private val sets = MethodsCollectionRepository.deserializeMethodCollection().methodSet
+class MethodDisplayViewModel(
+    private val repository: MethodRepository
+) : ViewModel() {
 
-    fun selectMethodsForStage(stage: Int): List<MethodItem> {
-        val stageType = Stage.values().associateBy(Stage::number)[stage]
+    fun methodsByStage(stage: Int): LiveData<List<MethodEntity>> {
+        return repository.methodsByStage(stage).asLiveData()
+    }
 
-        val methods = sets
-            .filter { ms -> ms.properties.stage == stage }
-//            .map { ms -> MethodItem(
-//                stage = stage,
-//                classification = Classification(
-//                    isLittle = ms.properties.classification?.isLittle ?: false,
-//                    isPlain = ms.properties.classification?.isPlain ?: false,
-//                    isTrebleDodging = ms.properties.classification?.isTrebleDodging ?: false
-//                ),
-//                leadLength = ms.properties.lengthOfLead ?: 0,
-//                huntBellPath = ms.properties.huntbellPath ?: "",
-//                huntBells = ms.properties.numberOfHunts ?: 0
-//            )}
-            .flatMap { ms -> ms.method }
-            .map { m -> MethodItem(
-                id = m.id,
-                stage = stageType,
-                name = m.title ?: "",
-                notation = m.notation ?: "",
-            )}
+    /**
+     TODO use, eg, when inserting favourite
+        /**
+         * Launching a new coroutine to insert the data in a non-blocking way
+         */
+        fun insert(word: Word) = viewModelScope.launch {
+            repository.insert(word)
+        }
+    */
+}
 
-        return methods
+class MethodDisplayViewModelFactory(
+    private val repository: MethodRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MethodDisplayViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return MethodDisplayViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

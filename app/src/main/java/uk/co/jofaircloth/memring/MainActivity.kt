@@ -3,6 +3,7 @@ package uk.co.jofaircloth.memring
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Spa
@@ -11,24 +12,43 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import uk.co.jofaircloth.memring.domain.PlaceNotationManager
 import uk.co.jofaircloth.memring.ui.components.ComposePlay
 import uk.co.jofaircloth.memring.ui.components.GenerateLine
 import uk.co.jofaircloth.memring.ui.methodDisplay.MethodDisplayScreen
+import uk.co.jofaircloth.memring.ui.methodDisplay.MethodDisplayViewModel
+import uk.co.jofaircloth.memring.ui.methodDisplay.MethodDisplayViewModelFactory
 import uk.co.jofaircloth.memring.ui.theme.MemringTheme
 
 class MainActivity : ComponentActivity() {
+    private val methodDisplayViewModel: MethodDisplayViewModel by viewModels {
+        MethodDisplayViewModelFactory((application as MemringApplication).repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        methodDisplayViewModel.methodsByStage(6).observe(this, Observer {
+            methods -> methods?.let { }
+        })
+
         setContent {
-            MyApp(modifier = Modifier.fillMaxSize())
+            MyApp(
+                methodDisplayViewModel,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp(modifier: Modifier = Modifier) {
+fun MyApp(
+    methodDisplayViewModel: MethodDisplayViewModel,
+    modifier: Modifier = Modifier
+) {
     MemringTheme {
 //        Scaffold(
 //            bottomBar = {}
@@ -38,7 +58,7 @@ fun MyApp(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.primaryContainer
             ) {
-                MethodDisplayScreen()
+                MethodDisplayScreen(methodDisplayViewModel)
 //                Greeting(
 //                    Modifier.padding(padding),
 //                    "Android"
@@ -82,7 +102,7 @@ fun MemringBottomNavigation(modifier: Modifier = Modifier) {
 @Composable
 fun MyAppPreview() {
     MemringTheme {
-        MyApp()
+//        MyApp()
     }
 }
 
