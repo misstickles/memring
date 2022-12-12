@@ -1,7 +1,6 @@
-package uk.co.jofaircloth.memring.ui.components
+package uk.co.jofaircloth.memring.ui.method
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -17,26 +16,22 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import uk.co.jofaircloth.memring.data.entities.MethodPropertyEntity
+import uk.co.jofaircloth.memring.domain.MethodManager
 import uk.co.jofaircloth.memring.domain.PlaceNotationManager
 import uk.co.jofaircloth.memring.ui.theme.MemringTheme
 
-data class BlueLineStyle(
-    var color: Color = Color.Red,
-    var colors: List<Color> = listOf(Color.Blue),
-    var strokeWidth: Float = 2F
-)
-
-private const val TAG = "BlueLineGenerator"
+private const val TAG = "PlaceNotationManager"
 
 // TODO refactor!!
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun GenerateLine(
+fun DisplayBlueLine(
     modifier: Modifier = Modifier,
-    method: List<List<String>>,
+    methodProperty: MethodPropertyEntity,
     forBells: List<String> = listOf("1", "5"), // this should only ever be len = 2
-    treble: BlueLineStyle = BlueLineStyle(color = Color.Red, strokeWidth = 1F),
-    workingBells: BlueLineStyle = BlueLineStyle(colors = listOf(Color.Green), strokeWidth = 2F),
+    treble: BlueLineStyle = BlueLineStyle(color = Color.Red, strokeWidth = 2F),
+    workingBells: BlueLineStyle = BlueLineStyle(colors = listOf(Color.Blue), strokeWidth = 4F),
     asOneLead: Boolean = false,
     fontSize: Int = 16,
     showText: Boolean = true,
@@ -56,18 +51,21 @@ fun GenerateLine(
     var currentBellIndex: Int
     var totalRows: Int
 
-    val rowCount = method.count() * method[0].count() - method.count() + 1 // TODO: ??
-    val stage: Int = method[0][0].count()
-
     val textStyle = TextStyle(fontSize = fontSize.sp, color = Color.Black)
+
+    val method = MethodManager().generate(methodProperty)
+    val stage = methodProperty.stage
+
+    val rowCount = method.count() * method[0].count() - method.count() + 1 // TODO: ??
 
     Box(modifier = Modifier
         .verticalScroll(rememberScrollState())
     ) {
-        Canvas(
+        Canvas( // TODO fix the width / height!
             modifier = modifier
-                .fillMaxWidth()
+//                .fillMaxWidth()
                 .offset(x = 10.dp, y = 10.dp)
+                .width((spacingWidth * (stage - 1)).dp)
                 .height((spacingHeight * rowCount / 2.5).dp)
         ) {
             if (showVerticals) {    // TODO Need to put this after - but also need to put it behind
@@ -118,7 +116,6 @@ fun GenerateLine(
                         )
 
                         val startBell = (lead[0].indexOf(bell) + 1).toString()
-                        Log.d(TAG, "Bell Length: $startBell : ${startBell.length}")
 
                         drawText(
                             textMeasurer = textMeasurer,
@@ -157,7 +154,6 @@ fun GenerateLine(
 
                     // lead separator
                     if (showStartBells and !asOneLead) {
-                        Log.d(TAG, "Showing start bells")
                         drawLine(
                             start = Offset(x = -textSize.width / 2f, y = (totalRows - 1) * spacingHeight - (spacingHeight / 2)),
                             end = Offset(x = spacingWidth * (stage - 1) + textSize.width / 2, y = (totalRows - 1) * spacingHeight - (spacingHeight / 2)),
@@ -227,34 +223,31 @@ fun GenerateLine(
     widthDp = 400, heightDp = 1000)
 @Composable
 fun DisplayBlueLinePreview() {
-    val method: List<List<String>>
-//    method = PlaceNotationManager().generateRows("5.1.5.1.5.1.5.1.5.1", 5) // plain hunt
-//    method = PlaceNotationManager().generateRows("5.1.5.1.5,125", 5) // plain bob doubles
-//    method = PlaceNotationManager().generateRows("-36-14-12-36.14-12.56,12", 6) // surfleet minor
-//    method = PlaceNotationManager().generateRows("-38-14-58-16-14-38-34-18,12", 8) // rutland major
-//    method = PlaceNotationManager().generateRows("3.1.7.3.1.3,1", 7) // stedman triples
-//    method = BlueLine().generateRows("3,1.5.1.7.1.7.1", 7) // single oxford bob triples
-//    method = BlueLine().generateRows("3,1.5.1.7.3.7.5", 7) // double oxford bob triples
-    method = PlaceNotationManager().generateRows("-5D-14.5D-5D.36.14-7D.58.16-9D.70.18-ED.9T.10-AD.EB.1T-1T.AD-1T-1D,1D", 16) // bristol s sixteen
-
-    Log.d(TAG, "Preview method: $method")
+//    val method = MethodPropertyEntity(notation = "5.1.5.1.5.1.5.1.5.1", stage = 5, title = "Plain hunt", id = "")
+    val method = MethodPropertyEntity(notation = "5.1.5.1.5,125", stage = 5, title = "Plain bob doubles", id = "")
+//    val method = MethodPropertyEntity(notation = "-36-14-12-36.14-12.56,12", stage = 6, title = "Surfleet minor", id = "")
+//    val method = MethodPropertyEntity(notation = "-38-14-58-16-14-38-34-18,12", stage = 8, title = "Rutland Surprise Major", id = "")
+//    val method = MethodPropertyEntity(notation = "3.1.7.3.1.3,1", stage = 7, title = "Stedman triples", id = "")
+//    val method = MethodPropertyEntity(notation = "3,1.5.1.7.1.7.1", stage = 7, title = "Single oxford bob triples", id = "")
+//    val method = MethodPropertyEntity(notatio = "3,1.5.1.7.3.7.5", stage = 7, title = "Double oxford bob triples", id = "")
+//    val method = MethodPropertyEntity(notation = "-5D-14.5D-5D.36.14-7D.58.16-9D.70.18-ED.9T.10-AD.EB.1T-1T.AD-1T-1D,1D", stage = 16, title = "Bristol Surprise Sixteen", id = "")
 
     MemringTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             Column() {
                 Text(
-                    text = "Oooh, a method",
+                    text = method.title ?: "Unknown Method",
                     color = MaterialTheme.colorScheme.onBackground,
 //                    style = MaterialTheme.typography.titleLarge
                 )
-                GenerateLine(
+                DisplayBlueLine(
                     modifier = Modifier
                         .background(color = Color.White),
-                    method = method,
+                    methodProperty = method,
                     forBells = listOf("1", "3"),
                     treble = BlueLineStyle(color = Color.Red, strokeWidth = 2F),
                     workingBells = BlueLineStyle(colors = listOf(Color.Blue), strokeWidth = 4F),
-                    asOneLead = true,
+                    asOneLead = false,
                     fontSize = 10,
                     showText = true,
                     showVerticals = true,

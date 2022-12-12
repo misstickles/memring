@@ -8,10 +8,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import uk.co.jofaircloth.memring.data.dao.MethodDao
-import uk.co.jofaircloth.memring.data.dao.MethodPerformanceDao
-import uk.co.jofaircloth.memring.data.dao.PerformanceDao
-import uk.co.jofaircloth.memring.data.dao.PropertyDao
+import uk.co.jofaircloth.memring.data.dao.*
 import uk.co.jofaircloth.memring.data.entities.*
 
 private const val TAG = "CollectionDatabase"
@@ -19,8 +16,8 @@ private const val TAG = "CollectionDatabase"
 @Database(
     entities = [
         MethodEntity::class,
-        PerformanceEntity::class,
         PropertyEntity::class,
+        PerformanceEntity::class,
         MethodPerformanceEntity::class,
         FavouriteEntity::class
     ],
@@ -30,9 +27,11 @@ private const val TAG = "CollectionDatabase"
 abstract class CollectionDatabase : RoomDatabase() {
 
     abstract fun methodDao(): MethodDao
-    abstract fun performanceDao(): PerformanceDao
     abstract fun propertyDao(): PropertyDao
+    abstract fun methodPropertyDao(): MethodPropertyDao
+    abstract fun performanceDao(): PerformanceDao
     abstract fun methodPerformanceDao(): MethodPerformanceDao
+    abstract fun favouriteDao(): FavouriteDao
 
     private class CollectionDatabaseCallback(
         private val scope: CoroutineScope
@@ -40,7 +39,7 @@ abstract class CollectionDatabase : RoomDatabase() {
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            Log.d(TAG, "ONCREEATE")
+            Log.d(TAG, "ONCREATE")
             INSTANCE?.let { database ->
                 scope.launch {
                     populateCollectionDatabase(

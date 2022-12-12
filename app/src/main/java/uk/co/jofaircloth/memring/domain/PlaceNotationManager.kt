@@ -1,51 +1,10 @@
 package uk.co.jofaircloth.memring.domain
 
 import android.util.Log
+import uk.co.jofaircloth.memring.data.models.BellNames
 
 class PlaceNotationManager {
     private val TAG = "PlaceNotationManager"
-
-    private val bellNames: List<Char> = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'E', 'T', 'A', 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L')
-
-    /*
-     * generate rows from 'startRow'
-     */
-    fun generateRows(notation: String, stage: Int): List<List<String>> {
-        val rounds = rounds(stage)
-        var currentRow: String = rounds
-
-        val method = mutableListOf<MutableList<String>>()
-
-        val changes = fullNotation(notation).split(".")
-
-        // TODO maybe use given leadLength to ensure we are doing the right iterations...
-        // TODO draw a line under lead length (repeat first row of next lead under it
-
-        // for each lead, write out each change
-        for (s in 1 .. stage) {
-            val lead = mutableListOf<String>()
-            lead.add(currentRow)
-
-            // Number of leads in
-            for (change in changes) {
-                currentRow = when (change) {
-                    "-" -> swapPairs(currentRow)
-                    else -> swapPairsExcept(currentRow, change)
-                }
-                lead.add(currentRow)
-            }
-
-            method.add(lead)
-
-            if (currentRow == rounds) {
-                break
-            }
-        }
-
-        Log.d(TAG, "Generated Rows: $method")
-
-        return method
-    }
 
     /*
      * split on ',' if none, return as-is
@@ -54,7 +13,7 @@ class PlaceNotationManager {
      *     append forward + reverse + le (or le + forward + reverse)
      * @Return formatted notation and every item separated by '.'
      */
-    private fun fullNotation(notation: String): String {
+    fun fullNotation(notation: String): String {
         var separateWithDot = notation.replace("-", ".-.")
         separateWithDot = separateWithDot
             .replace("..", ".")
@@ -88,7 +47,7 @@ class PlaceNotationManager {
         return fullNotation.joinToString(separator = ".")
     }
 
-    private fun swapPairs(currentRow: String): String {
+    fun swapPairs(currentRow: String): String {
         if (currentRow.isNullOrEmpty()) {
             return currentRow
         }
@@ -104,7 +63,7 @@ class PlaceNotationManager {
         return row.concatToString()
     }
 
-    private fun swapPairsExcept(currentRow: String, except: String): String {
+    fun swapPairsExcept(currentRow: String, except: String): String {
         if (currentRow.isNullOrEmpty()) {
             return currentRow
         }
@@ -114,7 +73,7 @@ class PlaceNotationManager {
 
         var place = 0
         while (place < row.count() - 1) {
-            if (doNotSwap.contains(bellNames[place])) {
+            if (doNotSwap.contains(BellNames[place])) {
                 place++
                 continue
             }
@@ -128,7 +87,7 @@ class PlaceNotationManager {
         return row.concatToString()
     }
 
-    private fun rounds(stage: Int): String {
-        return bellNames.slice(0 until stage).joinToString(separator = "")
+    fun rounds(stage: Int): String {
+        return BellNames.slice(0 until stage).joinToString(separator = "")
     }
 }

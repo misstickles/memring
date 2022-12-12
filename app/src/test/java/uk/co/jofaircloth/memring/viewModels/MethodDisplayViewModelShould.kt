@@ -2,11 +2,9 @@ package uk.co.jofaircloth.memring.viewModels
 
 import org.junit.Assert
 import org.junit.Test
-import uk.co.jofaircloth.memring.data.CollectionDatabase
-import uk.co.jofaircloth.memring.ui.methodDisplay.MethodDisplayViewModel
 
 class MethodDisplayViewModelShould {
-//    @Test
+    //    @Test
 //    fun getMethodsForStage() {
 //        val data = MethodDisplayViewModel(
 //            collectionDatabase = CollectionDatabase.getInstance()
@@ -14,4 +12,25 @@ class MethodDisplayViewModelShould {
 //
 //        Assert.assertEquals(1, data.count())
 //    }
+    @Test
+    fun extractDigitAndStringFromSearch() {
+        val search = "London 6"
+
+        val letters = search.filter { it.isLetter() }
+        val digits = search.filter { it.isDigit() }
+
+        Assert.assertEquals("London", letters)
+        Assert.assertEquals("6", digits)
+    }
+
+    @Test
+    fun useEmptyIfNoDigit() {
+        val search = "London"
+
+        val letters = search.filter { it.isLetter() }
+        val digits = search.filter { it.isDigit() }
+
+        Assert.assertEquals("London", letters)
+        Assert.assertEquals("", digits)
+    }
 }

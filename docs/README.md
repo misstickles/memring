@@ -2,32 +2,6 @@
 
 ## TODO
 
-- Read XML attribute (eg, falseness)
-- read XML from assets file
-- filter classification
-- Show position of calls (H, B, M, etc)
-  - based on end type (eg, 'b'?)
-- notation user input
-  - wrangle all the data!
-- bell start positions
-  - configure scale
-- multi columns
-  - option / if > X stage (?)
-  - repeat last row in column (first of next lead)
-- scale spacingwidth for different stages
-- options (accordion?) for settings in BL canvas
-  - sliders
-- move some of generate method to separate functions (?)
-- proper object for injected method (place notation, stage, bob, single)
-  - show bob, single
-- create list of exceptions for double-hunt methods
-  - allow to show 1/2 as hunt bells
-  - treble place methods (have a `huntbellPath`)
-  - what other type of exceptions, stedman?
-- Favourite
-- Show bluelines in multiple columns
-- Fix out of date version of Jackson (gone back this far to avoid THAT error static method not found)
-
 ### Persist data
 
 - To persist a view model when (eg, app is closed due to memory). Use for selected method / line / etc.
@@ -58,6 +32,10 @@ Robert Wallis, also rsw.me.uk
 
 [Mobel](https://play.google.com/store/apps/details?id=com.abelsim.mobel&hl=en&gl=US)
 From Abel, 6.99
+
+## Ringing Stuff
+
+- [Method Compositions](https://complib.org/help), including bob / single format
 
 ## Branches
 

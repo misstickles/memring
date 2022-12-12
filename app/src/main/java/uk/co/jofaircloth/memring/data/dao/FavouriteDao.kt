@@ -12,11 +12,13 @@ interface FavouriteDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(favourite: FavouriteEntity)
 
-    @Query("SELECT " +
-            "method.id, method.title, property.stage " +
-            "FROM method " +
-            "INNER JOIN property ON property.id = method.propertyId " +
-            "INNER JOIN favourite ON method.id = favourite.methodId " +
-            "ORDER BY favourite.dateAdded DESC")
+    @Query("SELECT * FROM favourite")
     fun allFavourites(): Flow<List<FavouriteEntity>>
+//    @Query("SELECT favourite.*" +
+////            "method.id, method.title, property.stage " +
+//            "FROM method " +
+//            "INNER JOIN property ON property.id = method.propertyId " +
+//            "INNER JOIN favourite ON method.id = favourite.methodId " +
+//            "ORDER BY favourite.dateAdded DESC")
+//    fun allFavourites(): Flow<List<FavouriteEntity>>
 }

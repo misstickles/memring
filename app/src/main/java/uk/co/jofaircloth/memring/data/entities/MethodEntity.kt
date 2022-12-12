@@ -38,9 +38,9 @@ data class MethodEntity(
     @ColumnInfo(name = "notation") val notation: String? = null,
     @ColumnInfo(name = "leadHead") val leadHead: String? = null,
     @ColumnInfo(name = "leadHeadCode") val leadHeadCode: String? = null,
-    @ColumnInfo(name = "fchGroups") val fchGroups: String? = null, // TODO this is an object
+    @ColumnInfo(name = "fchGroups") val fchGroups: String? = null,
     @ColumnInfo(name = "symmetry") val symmetry: String? = null, // palindromic | double | rotational
     @ColumnInfo(name = "extensionConstruction") val extensionConstruction: String? = null,
     @ColumnInfo(name = "notes") val notes: String? = null,
-    @ColumnInfo(name = "rwReference") val rwReference: String? = null, // TODO this is an object
+    @ColumnInfo(name = "rwReference") val rwReference: String? = null,
 )
