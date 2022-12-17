@@ -15,7 +15,7 @@ class MethodManager {
 
         val method = mutableListOf<MutableList<String>>()
 
-        val changes = PlaceNotationManager().fullNotation(methodProperty.notation ?: "").split(".")
+        val fullNotation = PlaceNotationManager().fullNotation(methodProperty.notation ?: "").split(".")
 
         // TODO maybe use given leadLength to ensure we are doing the right iterations...
         // TODO draw a line under lead length (repeat first row of next lead under it
@@ -26,7 +26,7 @@ class MethodManager {
             lead.add(currentRow)
 
             // Number of leads in
-            for (change in changes) {
+            for (change in fullNotation) {
                 currentRow = when (change) {
                     "-" -> PlaceNotationManager().swapPairs(currentRow)
                     else -> PlaceNotationManager().swapPairsExcept(currentRow, change)

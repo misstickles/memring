@@ -2,15 +2,13 @@ package uk.co.jofaircloth.memring.domain
 
 import android.util.Log
 import uk.co.jofaircloth.memring.data.entities.MethodPropertyEntity
-import uk.co.jofaircloth.memring.data.models.BellNames
-import uk.co.jofaircloth.memring.data.models.BobSingle
-import uk.co.jofaircloth.memring.data.models.Call
+import uk.co.jofaircloth.memring.data.models.*
 
 // https://complib.org/help#help-h-313
 class BobSingleManager {
     private val TAG = "BobSingleManager"
 
-    fun generate(methodProperty: MethodPropertyEntity, callNotation: String, callRows: Int = 8): Pair<Call, String> {
+    fun generate(methodProperty: MethodPropertyEntity, callNotation: String, callRows: Int = 8): Triple<MutableList<String>, String, String> {
         val foreAft = callRows / 2
 
         val method = MethodManager().generate(methodProperty)
@@ -22,7 +20,13 @@ class BobSingleManager {
         var changes = PlaceNotationManager().fullNotation(methodProperty.notation ?: "").split(".")
 
         if (callNotation != "") {
-            changes = changes.toMutableList().apply { this[changes.count() - 1] = callNotation }
+            if (methodProperty.name == "Grandsire") {
+                val c = callNotation.split(".")
+                changes = changes.toMutableList().apply { this[changes.count() - 2] = c[0] }
+                changes = changes.toMutableList().apply { this[changes.count() - 1] = c[1] }
+            } else {
+                changes = changes.toMutableList().apply { this[changes.count() - 1] = callNotation }
+            }
         }
 
         // change rows = last n + first n
@@ -58,10 +62,24 @@ class BobSingleManager {
             }
         }
 
-        return Pair(rows, affected)
+        return Triple(rows, affected, changes.joinToString("."))
     }
 
-    fun calls(method: MethodPropertyEntity): BobSingle {
+    fun calls(method: MethodPropertyEntity, type: CallSymbol): String {
+        val bobSingle = calls(method)
+
+        return when (type) {
+            CallSymbol.Single -> bobSingle.single ?: ""
+            CallSymbol.Bob -> bobSingle.bob ?: ""
+            CallSymbol.Omit -> bobSingle.omit ?: ""
+            CallSymbol.Double -> bobSingle.double ?: ""
+            CallSymbol.Extreme -> bobSingle.extreme ?: ""
+            CallSymbol.BigBob -> bobSingle.bigBob ?: ""
+            CallSymbol.BobSingle -> bobSingle.bobSingle ?: ""
+        }
+    }
+
+    private fun calls(method: MethodPropertyEntity): BobSingle {
         val evenStage = method.stage % 2 == 0
 
         if (method.name?.lowercase() == "grandsire") {

@@ -26,25 +26,30 @@ class MethodDisplayViewModel(
     fun onSearchTextChange(searchText: String) {
         Log.d(TAG, "SEARCH TEXT: $searchText")
 
-        val stage = searchText.filter { it.isDigit() }
-        val text = searchText.filter { it.isLetter() }
+        if (searchText.length >= 3) {
+            val stage = searchText.filter { it.isDigit() }
+            val text = searchText.filter { it.isLetter() }
 
-        viewModelScope.launch {
-            combine(
-                // TODO use input of selected stage (if set!)
-                repository.methodsByName(text, if (stage.isNotEmpty()) stage.toInt() else 0)
-                    .onEach { methods ->
-                        if (methods.isNotEmpty() && _selectedMethod.value == null) {
-                            _selectedMethod.value = methods[0]
-                        }
-                    },
-                _selectedMethod
-            ) { methods, selectedMethod ->
-                MethodDisplayViewState(
-                    methods = methods,
-                    selectedMethod = selectedMethod
-                )
-            }.collect { _state.value = it }
+            viewModelScope.launch {
+                combine(
+                    // TODO use input of selected stage (if set!)
+                    repository.methodsByName(
+                        text,
+                        if (stage.isNotEmpty() and (stage.length <= 2)) stage.toInt() else 0
+                    )
+                        .onEach { methods ->
+                            if (methods.isNotEmpty() && _selectedMethod.value == null) {
+                                _selectedMethod.value = methods[0]
+                            }
+                        },
+                    _selectedMethod
+                ) { methods, selectedMethod ->
+                    MethodDisplayViewState(
+                        methods = methods,
+                        selectedMethod = selectedMethod
+                    )
+                }.collect { _state.value = it }
+            }
         }
     }
 

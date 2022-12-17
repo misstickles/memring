@@ -23,7 +23,7 @@ fun AutoCompleteBox(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
     ) {
         TextField(
             modifier = Modifier
