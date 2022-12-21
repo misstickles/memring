@@ -1,11 +1,8 @@
 package uk.co.jofaircloth.memring.ui.methodDisplay
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -13,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.viewmodel.compose.viewModel
 import uk.co.jofaircloth.memring.ui.components.AutoCompleteBox
@@ -33,40 +31,52 @@ fun MethodDisplayScreen(
 
     val selectedMethod = viewState.selectedMethod
 
-    Column {
-        AutoCompleteBox(
-            onSearchTextChange = viewModel::onSearchTextChange,
-            methods = viewState.methods,
-            onMethodSelect = viewModel::onMethodSelect,
-            modifier = modifier
-                .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.secondaryContainer)
-        )
-
-        if (selectedMethod != null) {
-            Column(modifier = Modifier
-                .horizontalScroll(rememberScrollState())
+    BoxWithConstraints() {
+        Column {
+            AutoCompleteBox(
+                onSearchTextChange = viewModel::onSearchTextChange,
+                methods = viewState.methods,
+                onMethodSelect = viewModel::onMethodSelect,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.secondaryContainer)
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = selectedMethod.title ?: ""
-                )
-                Row {
-                    DisplayBlueLine(
-                        methodProperty = selectedMethod,
-                        modifier = Modifier.background(color = Color.White),
-                        showLinedNumbers = false,
-                        showNotation = true
-                    )
-                    Column {
-                        // TODO can 'speed' this up by storing the generated method
-                        for (call in listOf(CallSymbol.Bob, CallSymbol.Single)) {
-                            Text(text = call.name)
-                            DisplayBobSingle(
+                if (selectedMethod != null) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(this@BoxWithConstraints.maxHeight)
+                            .padding(2.dp)
+                            .horizontalScroll(rememberScrollState())
+//                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = selectedMethod.title ?: ""
+                        )
+                        Row {
+                            DisplayBlueLine(
                                 methodProperty = selectedMethod,
-                                call = call,
                                 modifier = Modifier.background(color = Color.White),
+                                showLinedNumbers = false,
                                 showNotation = true
                             )
+                            Column {
+                                // TODO can 'speed' this up by storing the generated method
+                                for (call in listOf(CallSymbol.Bob, CallSymbol.Single)) {
+                                    Text(text = call.name)
+                                    DisplayBobSingle(
+                                        methodProperty = selectedMethod,
+                                        call = call,
+                                        modifier = Modifier.background(color = Color.White),
+                                        showNotation = true
+                                    )
+                                }
+                            }
                         }
                     }
                 }

@@ -5,6 +5,7 @@
 package uk.co.jofaircloth.memring.ui.method
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
@@ -35,7 +37,7 @@ private const val TAG = "PlaceNotationManager"
 fun DisplayBlueLine(
     modifier: Modifier = Modifier,
     methodProperty: MethodPropertyEntity,
-    forBells: List<String> = listOf("1", "5"), // this should only ever be len = 2
+    forBells: List<String> = listOf("1", "4"), // this should only ever be len = 2
     treble: BlueLineStyle = BlueLineStyle(color = Color.Red, strokeWidth = 2F),
     workingBells: BlueLineStyle = BlueLineStyle(colors = listOf(Color.Blue), strokeWidth = 4F),
     asOneLead: Boolean = false,
@@ -46,14 +48,21 @@ fun DisplayBlueLine(
     showNotation: Boolean = true,
     showLinedNumbers: Boolean = false,
     asMultiColumn: Boolean = true,      // TODO
+    widthRatio: Int = 5, // 1 - 5 only // TODO guard 1 - 5, inc
+    heightRatio: Int = 5 // 1 - 5 only // TODO guard 1 - 5, inc
 ) {
     val textMeasurer = rememberTextMeasurer()
-    val textLayoutResult = textMeasurer.measure(text = AnnotatedString(text = "2", spanStyle = SpanStyle(fontSize = fontSize.sp))) // A random number to get its width
+    val textLayoutResult = textMeasurer.measure(
+        text = AnnotatedString(text = "2"),
+        style = TextStyle(fontSize = fontSize.sp)) // A random number to get its width
     val textSize = textLayoutResult.size
     val textStyle = TextStyle(fontSize = fontSize.sp, color = Color.DarkGray)
+    val textSizeDp = with(LocalDensity.current) {
+        textStyle.fontSize.toDp()
+    }
 
-    val spacingWidth = textSize.width * 1.4f
-    val spacingHeight = textSize.height * .8f
+    val spacingWidth = textSize.width * 1.4f * widthRatio * 0.25f // 1 = 0.25; 4 = 1.0
+    val spacingHeight = textSize.height * .8f * heightRatio * 0.2f // 1 = 0.2; 5 = 1.0
 
     var currentRow: List<String>
     var currentBellIndex: Int
@@ -62,18 +71,21 @@ fun DisplayBlueLine(
     val method = MethodManager().generate(methodProperty)
     val stage = methodProperty.stage
 
-    val rowCount = method.count() * method[0].count() - method.count() + 1 // TODO: ??
+    val rowCount = (method.count() * method[0].count()) - method.count() // # leads * rows in lead - repeat per lead
 
-    Box(modifier = Modifier
-        .verticalScroll(rememberScrollState())
+    Box(
+        modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
+        Log.d(TAG, "DP: $textSizeDp")
         Canvas( // TODO fix the width / height!
             modifier = modifier
                 .offset(x = 50.dp, y = 15.dp)
-                .width((spacingWidth * (stage - 1)).dp)
-                .height((spacingHeight * rowCount * 0.4).dp)
+                .requiredSize(
+                    width = (textSize.width * (stage + 2)).dp, // + 2 for bell starts
+                    height = (textSize.height * rowCount).dp
+                )
         ) {
-            if (showVerticals) {    // TODO Need to put this after - but also need to put it behind
+            if (showVerticals) {
                 this.drawVerticals(
                     stage = stage,
                     rowLocation = if (asOneLead) method[0].count() - 1 else rowCount - 1,
@@ -149,7 +161,7 @@ fun DisplayBlueLine(
                 }
             }
 
-            if (showText) {
+            if (showText and (heightRatio == 5)) {
                 this.drawMethodText(
                     method,
                     forBells,
@@ -263,10 +275,6 @@ private fun DrawScope.drawMethodText(
     }
 }
 
-//@Preview(
-//    showBackground = true,
-//    name = "Method Light",
-//    widthDp = 400, heightDp = 1000)
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
@@ -304,7 +312,10 @@ fun DisplayBlueLinePreview() {
                     showVerticals = true,
                     showStartBells = true,
                     asMultiColumn = true,
-                    showLinedNumbers = false
+                    showLinedNumbers = false,
+                    showNotation = false,
+                    widthRatio = 4,
+                    heightRatio = 5,
                 )
             }
         }

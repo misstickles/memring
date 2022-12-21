@@ -1,6 +1,7 @@
 package uk.co.jofaircloth.memring.domain
 
 import android.util.Log
+import androidx.compose.ui.text.toLowerCase
 import uk.co.jofaircloth.memring.data.entities.MethodPropertyEntity
 import uk.co.jofaircloth.memring.data.models.*
 
@@ -20,7 +21,7 @@ class BobSingleManager {
         var changes = PlaceNotationManager().fullNotation(methodProperty.notation ?: "").split(".")
 
         if (callNotation != "") {
-            if (methodProperty.name == "Grandsire") {
+            if (this.isGrandsire(methodProperty.name)) {
                 val c = callNotation.split(".")
                 changes = changes.toMutableList().apply { this[changes.count() - 2] = c[0] }
                 changes = changes.toMutableList().apply { this[changes.count() - 1] = c[1] }
@@ -44,8 +45,6 @@ class BobSingleManager {
             }
             rows.add(currentRow)
         }
-
-        Log.d(TAG, "Generated Rows: $rows")
 
         var affected: String = "1"
         if (method.count() > 1) {
@@ -82,14 +81,14 @@ class BobSingleManager {
     private fun calls(method: MethodPropertyEntity): BobSingle {
         val evenStage = method.stage % 2 == 0
 
-        if (method.name?.lowercase() == "grandsire") {
+        if (this.isGrandsire(method.name)) {
             val suffix = if (evenStage) BellNames[method.stage - 1] else ""
             return BobSingle(
                 bob = "3$suffix.1$suffix",
                 single = "3$suffix.123$suffix"
             )
         }
-        else if (method.name?.lowercase() == "stedman") {
+        else if (this.isStedman(method.name)) {
             val start = method.stage - 2 - 1
             return BobSingle(
                 bob = BellNames[start].toString(),
@@ -135,5 +134,13 @@ class BobSingleManager {
                 )
             }
         }
+    }
+
+    private fun isGrandsire(name: String?): Boolean {
+        return (name?.lowercase()?.contains("grandsire") == true)
+    }
+
+    private fun isStedman(name: String?): Boolean {
+        return (name?.lowercase()?.contains("stedman") == true)
     }
 }
