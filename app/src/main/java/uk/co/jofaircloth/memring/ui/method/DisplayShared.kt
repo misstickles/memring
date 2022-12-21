@@ -46,7 +46,9 @@ internal fun DrawScope.drawNotation(
         .split(".")
 
     val style = textStyle.copy(fontSize = textStyle.fontSize * 0.8, color = Color.Gray)
-    val textLayoutResult = textMeasurer.measure(text = AnnotatedString(text = "2", spanStyle = SpanStyle(fontSize = textStyle.fontSize))) // A random number to get its width
+    val textLayoutResult = textMeasurer.measure(
+        text = AnnotatedString(text = "2"),
+        style = TextStyle(fontSize = textStyle.fontSize))
     val textSize = textLayoutResult.size
 
     for ((idx, n) in fullNotation.withIndex()) {
@@ -54,7 +56,7 @@ internal fun DrawScope.drawNotation(
             textMeasurer = textMeasurer,
             text = n,
             topLeft = Offset(
-                x = -n.length * textSize.width.toFloat() - textSize.width.toFloat() * 1.7F,
+                x = (-n.length * textSize.width.toFloat()) - textSize.width.toFloat() * 1.7f,
                 y = (spacingHeight * idx)
             ),
             style = style

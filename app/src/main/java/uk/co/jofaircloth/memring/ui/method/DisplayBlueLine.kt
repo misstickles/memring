@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -58,9 +57,6 @@ fun DisplayBlueLine(
         style = TextStyle(fontSize = fontSize.sp)) // A random number to get its width
     val textSize = textLayoutResult.size
     val textStyle = TextStyle(fontSize = fontSize.sp, color = Color.DarkGray)
-    val textSizeDp = with(LocalDensity.current) {
-        textStyle.fontSize.toDp()
-    }
 
     val spacingWidth = textSize.width * 1.4f * widthRatio * 0.25f // 1 = 0.25; 4 = 1.0
     val spacingHeight = textSize.height * .8f * heightRatio * 0.2f // 1 = 0.2; 5 = 1.0
@@ -72,18 +68,28 @@ fun DisplayBlueLine(
     val method = MethodManager().generate(methodProperty)
     val stage = methodProperty.stage
 
-    val rowCount = (method.count() * method[0].count()) - method.count() // # leads * rows in lead - repeat per lead
+    val rowCount = (method.count() * (method[0].count() - 2)) // # leads * rows in lead - repeat per lead
 
     Box(
-        modifier = Modifier.verticalScroll(rememberScrollState())
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .border(1.dp, Color.Green)
+            .padding(start = 40.dp, top = 10.dp)
     ) {
-        Log.d(TAG, "DP: $textSizeDp")
+        val width = with(LocalDensity.current) {
+            textSize.width.toDp() * ((stage + 1) * 2)
+        }
+        val height = with(LocalDensity.current) {
+            textSize.height.toDp() * rowCount
+        }
+
+        Log.d(TAG, "W: $width / H: $height")
+
         Canvas( // TODO fix the width / height!
             modifier = modifier
-                .offset(x = 50.dp, y = 15.dp)
                 .requiredSize(
-                    width = (textSize.width * (stage + 2)).dp, // + 2 for bell starts
-                    height = (textSize.height * rowCount).dp
+                    width = width,
+                    height = height
                 )
         ) {
             if (showVerticals) {
@@ -95,11 +101,23 @@ fun DisplayBlueLine(
                 )
             }
 
-            for ((bellId, bell) in forBells.withIndex()) {
+            for ((bellId, bell) in method[0][0].chunked(1).withIndex()) {
                 if (bell.toInt() > stage) continue
 
                 var previousBellIndex = bell.toInt() - 1
-                totalRows = 1
+                totalRows = 0
+
+                if (showText) {
+                    drawText(
+                        textMeasurer = textMeasurer,
+                        text = bell,
+                        topLeft = Offset(
+                            x = (spacingWidth * bellId) - (textSize.width / 2),
+                            y = (spacingHeight * totalRows) - (textSize.height / 2)
+                        ),
+                        style = textStyle
+                    )
+                }
 
                 val color: Color = if (asOneLead) {
                     if (bell == "1") treble.color else workingBells.colors[(workingBells.colors.count() + bellId - 1) % workingBells.colors.count()]
@@ -110,7 +128,8 @@ fun DisplayBlueLine(
                 val strokeWidth: Float = if (bell == "1") treble.strokeWidth else workingBells.strokeWidth
 
                 for (lead in method) {
-                    if ((bell != "1") and !asOneLead) {
+                    Log.d(TAG, "LEAD: $lead")
+                    if ((bell != "1") and !asOneLead and (forBells.contains(bell))) {
                         this.drawStartPositions(
                             bell = bell,
                             lead = lead,
@@ -119,32 +138,49 @@ fun DisplayBlueLine(
                             textStyle = textStyle,
                             textSize = textSize,
                             fontSize = fontSize,
-                            totalRows = totalRows,
+                            totalRows = totalRows + 1,
                             spacingWidth = spacingWidth,
                             spacingHeight = spacingHeight
                         )
                     }
 
-                    // first row repeats rounds + previous row in each lead, start @1 removes it
                     for ((rowId, row) in lead.withIndex()) {
                         if (rowId == 0) continue
 
                         currentRow = row.chunked(1)
                         currentBellIndex = currentRow.indexOf(bell)
 
-                        drawLine(
-                            start = Offset(
-                                x = spacingWidth * previousBellIndex,
-                                y = spacingHeight * (if (asOneLead) rowId - 1 else totalRows - 1)
-                            ),
-                            end = Offset(
-                                x = spacingWidth * currentBellIndex,
-                                y = spacingHeight * (if (asOneLead) rowId else totalRows)
-                            ),
-                            color = color,
-                            strokeWidth = strokeWidth,
-                            cap = StrokeCap.Round
-                        )
+                        if (forBells.contains(bell)) {
+                            drawLine(
+                                start = Offset(
+                                    x = spacingWidth * previousBellIndex,
+                                    y = spacingHeight * (if (asOneLead) rowId - 1 else totalRows)
+                                ),
+                                end = Offset(
+                                    x = spacingWidth * currentBellIndex,
+                                    y = spacingHeight * (if (asOneLead) rowId else totalRows + 1)
+                                ),
+                                color = color,
+                                strokeWidth = strokeWidth,
+                                cap = StrokeCap.Round
+                            )
+                        }
+
+                        if (!showLinedNumbers and forBells.contains(bell)) {
+
+                        } else {
+                            if (showText) {
+                                drawText(
+                                    textMeasurer = textMeasurer,
+                                    text = bell,
+                                    topLeft = Offset(
+                                        x = (spacingWidth * currentBellIndex) - (textSize.width / 2),
+                                        y = (spacingHeight * (totalRows + 1)) - (textSize.height / 2)
+                                    ),
+                                    style = textStyle
+                                )
+                            }
+                        }
 
                         previousBellIndex = currentBellIndex
                         totalRows++
@@ -154,7 +190,7 @@ fun DisplayBlueLine(
                        this.drawLeadSeparator(
                            stage = stage,
                            textSize = textSize,
-                           totalRows = totalRows,
+                           totalRows = totalRows + 1,
                            spacingWidth = spacingWidth,
                            spacingHeight = spacingHeight
                        )
@@ -162,19 +198,19 @@ fun DisplayBlueLine(
                 }
             }
 
-            if (showText and (heightRatio == 5)) {
-                this.drawMethodText(
-                    method,
-                    forBells,
-                    showLinedNumbers,
-                    asOneLead,
-                    textMeasurer,
-                    textSize,
-                    textStyle,
-                    spacingWidth,
-                    spacingHeight
-                )
-            }
+//            if (showText and (heightRatio == 5)) {
+//                this.drawMethodText(
+//                    method,
+//                    forBells,
+//                    showLinedNumbers,
+//                    asOneLead,
+//                    textMeasurer,
+//                    textSize,
+//                    textStyle,
+//                    spacingWidth,
+//                    spacingHeight
+//                )
+//            }
 
             if (showNotation) {
                 this.drawNotation(
@@ -284,9 +320,9 @@ private fun DrawScope.drawMethodText(
 @Composable
 fun DisplayBlueLinePreview() {
 //    val method = MethodPropertyEntity(notation = "5.1.5.1.5.1.5.1.5.1", stage = 5, title = "Plain hunt", id = "")
-//    val method = MethodPropertyEntity(notation = "5.1.5.1.5,125", stage = 5, title = "Plain bob doubles", id = "")
+    val method = MethodPropertyEntity(notation = "5.1.5.1.5,125", stage = 5, title = "Plain bob doubles", id = "")
 //    val method = MethodPropertyEntity(notation = "-36-14-12-36.14-12.56,12", stage = 6, title = "Surfleet minor", id = "")
-    val method = MethodPropertyEntity(notation = "-38-14-58-16-14-38-34-18,12", stage = 8, title = "Rutland Surprise Major", id = "")
+//    val method = MethodPropertyEntity(notation = "-38-14-58-16-14-38-34-18,12", stage = 8, title = "Rutland Surprise Major", id = "")
 //    val method = MethodPropertyEntity(notation = "3.1.7.3.1.3,1", stage = 7, title = "Stedman triples", id = "")
 //    val method = MethodPropertyEntity(notation = "3,1.5.1.7.1.7.1", stage = 7, title = "Single oxford bob triples", id = "")
 //    val method = MethodPropertyEntity(notatio = "3,1.5.1.7.3.7.5", stage = 7, title = "Double oxford bob triples", id = "")
@@ -297,8 +333,7 @@ fun DisplayBlueLinePreview() {
             Column() {
                 Text(
                     text = method.title ?: "Unknown Method",
-                    color = MaterialTheme.colorScheme.onBackground,
-//                    style = MaterialTheme.typography.titleLarge
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 DisplayBlueLine(
                     modifier = Modifier
@@ -314,7 +349,7 @@ fun DisplayBlueLinePreview() {
                     showStartBells = true,
                     asMultiColumn = true,
                     showLinedNumbers = false,
-                    showNotation = false,
+                    showNotation = true,
                     widthRatio = 4,
                     heightRatio = 5,
                 )
