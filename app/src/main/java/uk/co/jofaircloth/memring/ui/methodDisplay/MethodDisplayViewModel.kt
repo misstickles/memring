@@ -1,6 +1,7 @@
 package uk.co.jofaircloth.memring.ui.methodDisplay
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ class MethodDisplayViewModel(
     private val TAG = "MethodDisplayViewModel"
 
     private val _selectedMethod = MutableStateFlow<MethodPropertyEntity?>(null)
+    private val _predictions = mutableStateOf(ArrayList<MethodPropertyEntity?>())
 
     private val _state = MutableStateFlow(MethodDisplayViewState())
 
@@ -24,11 +26,9 @@ class MethodDisplayViewModel(
     }
 
     fun onSearchTextChange(searchText: String) {
-        Log.d(TAG, "SEARCH TEXT: $searchText")
-
         if (searchText.length >= 3) {
             val stage = searchText.filter { it.isDigit() }
-            val text = searchText.filter { it.isLetter() }
+            val text = searchText.filter { !it.isDigit() }
 
             viewModelScope.launch {
                 combine(
@@ -38,8 +38,9 @@ class MethodDisplayViewModel(
                         if (stage.isNotEmpty() and (stage.length <= 2)) stage.toInt() else 0
                     )
                         .onEach { methods ->
-                            if (methods.isNotEmpty() && _selectedMethod.value == null) {
-                                _selectedMethod.value = methods[0]
+                            if (methods.isNotEmpty() && _predictions.value == null) {
+                                @Suppress("UNCHECKED_CAST")
+                                _predictions.value = methods as ArrayList<MethodPropertyEntity?>
                             }
                         },
                     _selectedMethod

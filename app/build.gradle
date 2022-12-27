@@ -76,7 +76,9 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.compose.material3:material3:$material3_version"
     implementation "androidx.compose.material3:material3-window-size-class:$material3_version"
-//    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
+
+    // datastore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     // xml components
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.7'

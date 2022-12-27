@@ -21,10 +21,7 @@ class PlaceNotationManager {
 
         val parts: List<String> = separateWithDot.split(",")
 
-        Log.d(TAG, "Notation parts: $parts")
-
         if (parts.count() <= 1) {
-            Log.d(TAG, "Only one part")
             return parts[0]
         }
 

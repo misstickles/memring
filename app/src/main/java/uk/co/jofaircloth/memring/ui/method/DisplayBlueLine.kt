@@ -25,89 +25,97 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import uk.co.jofaircloth.memring.data.entities.MethodPropertyEntity
+import uk.co.jofaircloth.memring.data.models.BellNames
 import uk.co.jofaircloth.memring.data.models.Method
 import uk.co.jofaircloth.memring.domain.MethodManager
 import uk.co.jofaircloth.memring.ui.theme.MemringTheme
+import kotlin.math.max
 
 private const val TAG = "PlaceNotationManager"
+
+data class BlueLineUiModel(
+    val methodProperty: MethodPropertyEntity,
+    val modifier: Modifier = Modifier,
+    val forBells: List<String> = listOf("1", "4"), // this should only ever be len = 2
+    val treble: BlueLineStyle = BlueLineStyle(color = Color.Red, strokeWidth = 2F),
+    val workingBells: BlueLineStyle = BlueLineStyle(colors = listOf(Color.Blue), strokeWidth = 4F),
+    val asOneLead: Boolean = false,
+    val fontSize: Int = 16,
+    val showText: Boolean = true,
+    val showVerticals: Boolean = true,
+    val showStartBells: Boolean = true,
+    val showNotation: Boolean = true,
+    val showLinedNumbers: Boolean = false,
+    val asMultiColumn: Boolean = true,      // TODO
+    val widthRatio: Int = 5, // 1 - 5 only // TODO guard 1 - 5, inc
+    val heightRatio: Int = 5 // 1 - 5 only // TODO guard 1 - 5, inc
+)
 
 // TODO refactor!!
 // TODO suspend displayblueline
 @Composable
 fun DisplayBlueLine(
-    modifier: Modifier = Modifier,
-    methodProperty: MethodPropertyEntity,
-    forBells: List<String> = listOf("1", "4"), // this should only ever be len = 2
-    treble: BlueLineStyle = BlueLineStyle(color = Color.Red, strokeWidth = 2F),
-    workingBells: BlueLineStyle = BlueLineStyle(colors = listOf(Color.Blue), strokeWidth = 4F),
-    asOneLead: Boolean = false,
-    fontSize: Int = 16,
-    showText: Boolean = true,
-    showVerticals: Boolean = true,
-    showStartBells: Boolean = true,
-    showNotation: Boolean = true,
-    showLinedNumbers: Boolean = false,
-    asMultiColumn: Boolean = true,      // TODO
-    widthRatio: Int = 5, // 1 - 5 only // TODO guard 1 - 5, inc
-    heightRatio: Int = 5 // 1 - 5 only // TODO guard 1 - 5, inc
+    input: BlueLineUiModel
 ) {
     val textMeasurer = rememberTextMeasurer()
     val textLayoutResult = textMeasurer.measure(
         text = AnnotatedString(text = "2"),
-        style = TextStyle(fontSize = fontSize.sp)) // A random number to get its width
+        style = TextStyle(fontSize = input.fontSize.sp)) // A random number to get its width
     val textSize = textLayoutResult.size
-    val textStyle = TextStyle(fontSize = fontSize.sp, color = Color.DarkGray)
+    val textStyle = TextStyle(fontSize = input.fontSize.sp, color = Color.DarkGray)
 
-    val spacingWidth = textSize.width * 1.4f * widthRatio * 0.25f // 1 = 0.25; 4 = 1.0
-    val spacingHeight = textSize.height * .8f * heightRatio * 0.2f // 1 = 0.2; 5 = 1.0
+    val spacingWidth = textSize.width * 1.4f * input.widthRatio * 0.25f // 1 = 0.25; 4 = 1.0
+    val spacingHeight = textSize.height * .8f * input.heightRatio * 0.2f // 1 = 0.2; 5 = 1.0
 
     var currentRow: List<String>
     var currentBellIndex: Int
     var totalRows: Int
 
-    val method = MethodManager().generate(methodProperty)
-    val stage = methodProperty.stage
+    val method = MethodManager().generate(input.methodProperty)
+    val stage = input.methodProperty.stage
 
-    val rowCount = (method.count() * (method[0].count() - 2)) // # leads * rows in lead - repeat per lead
+    val rowCount = (method.count() * (method[0].count() - 1)) // # leads * rows in lead - repeat per lead
 
     Box(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .border(1.dp, Color.Green)
             .padding(start = 40.dp, top = 10.dp)
     ) {
         val width = with(LocalDensity.current) {
-            textSize.width.toDp() * ((stage + 1) * 2)
+            spacingWidth.toDp() * (stage + 2)
         }
         val height = with(LocalDensity.current) {
-            textSize.height.toDp() * rowCount
+            (spacingHeight.toDp() * rowCount) + (textSize.height / 2).toDp()
         }
 
-        Log.d(TAG, "W: $width / H: $height")
+        Log.d(TAG, "W: $width / H: $height / T: $textSize")
 
         Canvas( // TODO fix the width / height!
-            modifier = modifier
+            modifier = input.modifier
                 .requiredSize(
                     width = width,
                     height = height
                 )
         ) {
-            if (showVerticals) {
+            try {
+            if (input.showVerticals) {
                 this.drawVerticals(
                     stage = stage,
-                    rowLocation = if (asOneLead) method[0].count() - 1 else rowCount - 1,
+                    rowLocation = if (input.asOneLead) method[0].count() - 1 else rowCount - 1,
                     spacingWidth = spacingWidth,
                     spacingHeight = spacingHeight
                 )
             }
 
             for ((bellId, bell) in method[0][0].chunked(1).withIndex()) {
-                if (bell.toInt() > stage) continue
+                val bellInt = BellNames.indexOf(bell.toCharArray()[0])
 
-                var previousBellIndex = bell.toInt() - 1
+                if (bellInt > stage) continue
+
+                var previousBellIndex = bellInt
                 totalRows = 0
 
-                if (showText) {
+                if (input.showText) {
                     drawText(
                         textMeasurer = textMeasurer,
                         text = bell,
@@ -119,17 +127,16 @@ fun DisplayBlueLine(
                     )
                 }
 
-                val color: Color = if (asOneLead) {
-                    if (bell == "1") treble.color else workingBells.colors[(workingBells.colors.count() + bellId - 1) % workingBells.colors.count()]
+                val color: Color = if (input.asOneLead) {
+                    if (bell == "1") input.treble.color else input.workingBells.colors[(input.workingBells.colors.count() + bellId - 1) % input.workingBells.colors.count()]
                 } else {
-                    if (bell == "1") treble.color else workingBells.colors[0]
+                    if (bell == "1") input.treble.color else input.workingBells.colors[0]
                 }
 
-                val strokeWidth: Float = if (bell == "1") treble.strokeWidth else workingBells.strokeWidth
+                val strokeWidth: Float = if (bell == "1") input.treble.strokeWidth else input.workingBells.strokeWidth
 
                 for (lead in method) {
-                    Log.d(TAG, "LEAD: $lead")
-                    if ((bell != "1") and !asOneLead and (forBells.contains(bell))) {
+                    if ((bell != "1") and !input.asOneLead and (input.forBells.contains(bell))) {
                         this.drawStartPositions(
                             bell = bell,
                             lead = lead,
@@ -137,7 +144,7 @@ fun DisplayBlueLine(
                             textMeasurer = textMeasurer,
                             textStyle = textStyle,
                             textSize = textSize,
-                            fontSize = fontSize,
+                            fontSize = input.fontSize,
                             totalRows = totalRows + 1,
                             spacingWidth = spacingWidth,
                             spacingHeight = spacingHeight
@@ -150,15 +157,15 @@ fun DisplayBlueLine(
                         currentRow = row.chunked(1)
                         currentBellIndex = currentRow.indexOf(bell)
 
-                        if (forBells.contains(bell)) {
+                        if (input.forBells.contains(bell)) {
                             drawLine(
                                 start = Offset(
                                     x = spacingWidth * previousBellIndex,
-                                    y = spacingHeight * (if (asOneLead) rowId - 1 else totalRows)
+                                    y = spacingHeight * (if (input.asOneLead) rowId - 1 else totalRows)
                                 ),
                                 end = Offset(
                                     x = spacingWidth * currentBellIndex,
-                                    y = spacingHeight * (if (asOneLead) rowId else totalRows + 1)
+                                    y = spacingHeight * (if (input.asOneLead) rowId else totalRows + 1)
                                 ),
                                 color = color,
                                 strokeWidth = strokeWidth,
@@ -166,10 +173,10 @@ fun DisplayBlueLine(
                             )
                         }
 
-                        if (!showLinedNumbers and forBells.contains(bell)) {
+                        if (!input.showLinedNumbers and input.forBells.contains(bell)) {
 
                         } else {
-                            if (showText) {
+                            if (input.showText) {
                                 drawText(
                                     textMeasurer = textMeasurer,
                                     text = bell,
@@ -186,7 +193,7 @@ fun DisplayBlueLine(
                         totalRows++
                     }
 
-                   if (showStartBells and !asOneLead) {
+                   if (input.showStartBells and !input.asOneLead) {
                        this.drawLeadSeparator(
                            stage = stage,
                            textSize = textSize,
@@ -212,13 +219,16 @@ fun DisplayBlueLine(
 //                )
 //            }
 
-            if (showNotation) {
+            if (input.showNotation) {
                 this.drawNotation(
-                    notation = methodProperty.notation ?: "",
+                    notation = input.methodProperty.notation ?: "",
                     textMeasurer = textMeasurer,
                     textStyle = textStyle,
                     spacingHeight = spacingHeight
                 )
+            }
+            } catch (e: Exception) {
+                Log.e(TAG, e.toString())
             }
         }
     }
@@ -328,6 +338,25 @@ fun DisplayBlueLinePreview() {
 //    val method = MethodPropertyEntity(notatio = "3,1.5.1.7.3.7.5", stage = 7, title = "Double oxford bob triples", id = "")
 //    val method = MethodPropertyEntity(notation = "-5D-14.5D-5D.36.14-7D.58.16-9D.70.18-ED.9T.10-AD.EB.1T-1T.AD-1T-1D,1D", stage = 16, title = "Bristol Surprise Sixteen", id = "")
 
+    val input = BlueLineUiModel(
+        modifier = Modifier
+            .background(color = Color.White),
+        methodProperty = method,
+        forBells = listOf("1", "3"),
+        treble = BlueLineStyle(color = Color.Red, strokeWidth = 2F),
+        workingBells = BlueLineStyle(colors = listOf(Color.Blue), strokeWidth = 4F),
+        asOneLead = false,
+        fontSize = 10,
+        showText = true,
+        showVerticals = true,
+        showStartBells = true,
+        asMultiColumn = true,
+        showLinedNumbers = false,
+        showNotation = true,
+        widthRatio = 4,
+        heightRatio = 5,
+    )
+
     MemringTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             Column() {
@@ -336,22 +365,7 @@ fun DisplayBlueLinePreview() {
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 DisplayBlueLine(
-                    modifier = Modifier
-                        .background(color = Color.White),
-                    methodProperty = method,
-                    forBells = listOf("1", "3"),
-                    treble = BlueLineStyle(color = Color.Red, strokeWidth = 2F),
-                    workingBells = BlueLineStyle(colors = listOf(Color.Blue), strokeWidth = 4F),
-                    asOneLead = false,
-                    fontSize = 10,
-                    showText = true,
-                    showVerticals = true,
-                    showStartBells = true,
-                    asMultiColumn = true,
-                    showLinedNumbers = false,
-                    showNotation = true,
-                    widthRatio = 4,
-                    heightRatio = 5,
+                    input
                 )
             }
         }

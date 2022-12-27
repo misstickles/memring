@@ -1,11 +1,19 @@
 package uk.co.jofaircloth.memring.ui.components
 
+import android.app.Activity
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import uk.co.jofaircloth.memring.data.entities.MethodPropertyEntity
+import uk.co.jofaircloth.memring.ui.theme.MemringTheme
+
+const val TAG = "AutoCompleteBox"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -15,8 +23,6 @@ fun AutoCompleteBox(
     onMethodSelect: (MethodPropertyEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val TAG = "AutoCompleteBox"
-
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf("") }
 
@@ -74,10 +80,10 @@ fun AutoCompleteBox(
 //    }
 
 
-//    @Composable
-//    @Preview(showBackground = true)
-//    fun AutoCompleteBoxPreview() {
-//        MemringTheme {
-//            AutoCompleteBox()
-//        }
+//@Composable
+//@Preview(showBackground = true)
+//fun AutoCompleteBoxPreview() {
+//    MemringTheme {
+////        AutoCompleteBox()
 //    }
+//}
